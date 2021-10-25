@@ -1,4 +1,4 @@
-import { CheckCircleIcon,MinusIcon } from "@chakra-ui/icons";
+import { CheckCircleIcon, MinusIcon } from "@chakra-ui/icons";
 import {
   Center,
   Input,
@@ -13,44 +13,45 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 
-
 const AddTodo = () => {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [todos, setTodos] = useState<any[]>([]);
   const [todo, setTodo] = useState("");
-  const handleKeywordKeyPress = (e: React.KeyboardEvent<typeof FormControl>) => {
-    if (e.key === "Enter") {
-      addTodo()
+  const addTodo = () => {
+    if (todo !== "") {
+      setTodos((prevState) => [
+        ...prevState,
+        {
+          isDone: false,
+          todo,
+          id: todos.length,
+        },
+      ]);
+      setTodo("");
     }
   };
-  const addTodo = () => {
-    if (todo!==''){
-      let ord = [...todos, {
-        isDone: false,
-        todo: todo
-      }]
-      // @ts-ignore
-      setTodos(prevState => ([ ...prevState,{
-        isDone: false,
-        todo: todo,
-        id: todos.length
-      } ]));
-      setTodo("")
-    }
 
-  }
-  const  todoClick= (idx: any, todo: any) => {
-    let tds = todos.map(a => {
+  const handleKeywordKeyPress = (
+    e: React.KeyboardEvent<typeof FormControl>
+  ) => {
+    if (e.key === "Enter") {
+      addTodo();
+    }
+  };
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  const todoClick = (idx: any, td: any) => {
+    const tds = todos.map((a) => {
       // @ts-ignore
-      if (a.id === todo.id) {
+      if (a.id === td.id) {
         // @ts-ignore
-        a.isDone = !a.isDone
+        a.isDone = !a.isDone;
       }
-      return a
+      return a;
     });
-    setTodos(tds)
-  }
-  const bg = useColorModeValue("gray.100", "gray.700")
-  const color = useColorModeValue("gray.700", "gray.100")
+    setTodos(tds);
+  };
+  const bg = useColorModeValue("gray.100", "gray.700");
+  const color = useColorModeValue("gray.700", "gray.100");
 
   // @ts-ignore
   return (
@@ -78,20 +79,30 @@ const AddTodo = () => {
             </Button>
           </InputRightElement>
         </InputGroup>
-
       </Center>
 
       <Center mt={10}>
         <List spacing={2} w="100%">
-          {todos.map((a,idx) => (
-            //@ts-ignore
-              <ListItem cursor="pointer" _hover={{
+          {todos.map((a, idx) => (
+            // @ts-ignore
+            <ListItem
+              cursor="pointer"
+              _hover={{
                 background: bg,
-                color: color,
-              }} borderWidth="1px" borderRadius="lg" p="16px" key={a.id} onClick={()=>todoClick(idx, a)}>
-                <ListIcon as={a.isDone?CheckCircleIcon:MinusIcon} color={a.isDone? "green.500": "red.500"} />
-                {a.todo}
-              </ListItem>
+                color,
+              }}
+              borderWidth="1px"
+              borderRadius="lg"
+              p="16px"
+              key={a.id}
+              onClick={() => todoClick(idx, a)}
+            >
+              <ListIcon
+                as={a.isDone ? CheckCircleIcon : MinusIcon}
+                color={a.isDone ? "green.500" : "red.500"}
+              />
+              {a.todo}
+            </ListItem>
           ))}
         </List>
       </Center>
