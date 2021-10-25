@@ -21,8 +21,6 @@ import Box from "../motion/Box";
 
 const AddTodo = () => {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
-  // @ts-ignore
-  const SERVER = <div>server</div>;
   const [todos, setTodos] = useState<any[]>([]);
   const [todo, setTodo] = useState("");
   const [isServer, setIsServer] = useState(typeof window === "undefined");
@@ -129,7 +127,7 @@ const AddTodo = () => {
                   <Flex direction="column">
                     <Flex  alignItems="center">
                       <ListIcon
-                        as={a.isDone ? CheckCircleIcon : CheckCircleIcon}
+                        as={CheckCircleIcon}
                         color={a.isDone ? "green.500" : "gray.500"}
                       />
                       <Spacer />
