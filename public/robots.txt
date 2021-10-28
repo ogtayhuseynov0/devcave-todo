@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://todo.devcave.xyz/
+
+# Sitemaps
+Sitemap: https://todo.devcave.xyz/sitemap.xml
