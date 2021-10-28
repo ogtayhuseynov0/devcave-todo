@@ -1,4 +1,4 @@
-import { CheckCircleIcon, MinusIcon } from "@chakra-ui/icons";
+import { CheckCircleIcon, MinusIcon, EditIcon, CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import {
   Center,
   Input,
@@ -14,12 +14,14 @@ import {
   IconButton,
   ListItem,
   ListIcon,
-  useColorModeValue,
+  Editable, EditableInput, EditablePreview,
+  useColorModeValue, useEditableControls, ButtonGroup
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import Box from "../motion/Box";
 
 const AddTodo = () => {
+
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [todos, setTodos] = useState<any[]>([]);
   const [todo, setTodo] = useState("");
@@ -28,7 +30,7 @@ const AddTodo = () => {
   useEffect(() => {
     setIsServer(false)
     setTodos(JSON.parse(localStorage?.getItem("todos") as string) || []);
-    setHideDones(localStorage?.getItem("hideDones") as string as boolean);
+    setHideDones(String(localStorage?.getItem("hideDones")) == "true");
   }, []);
   // @ts-ignore
   useEffect(() => {
@@ -74,11 +76,50 @@ const AddTodo = () => {
     setTodos(tds);
   };
   const hideDonesF = () => {
+    console.log(hideDones);
     setHideDones(!hideDones)
   }
   const deleteAll = () => {
     setTodos([])
   }
+  const textChanged = (text:string, id:number) => {
+    const tds = todos.map((a) => {
+      // @ts-ignore
+      if (a.id === id) {
+        // @ts-ignore
+        a.todo = text;
+      }
+      return a;
+    });
+    setTodos(tds);
+  }
+  const EditableContext = () => {
+    const {
+      isEditing,
+      getSubmitButtonProps,
+      getCancelButtonProps,
+      getEditButtonProps,
+    } = useEditableControls()
+    return isEditing ? (
+      <Flex justifyContent="end" mt={4} mr={1}>
+        <ButtonGroup justifyContent="center" size="sm">
+          <Tooltip label="Submit" placement="bottom" bg="green" color="white">
+            <IconButton icon={<CheckIcon />} {...getSubmitButtonProps()}  />
+          </Tooltip>
+          <Tooltip label="Close" placement="bottom" bg="gray" color="white">
+            <IconButton icon={<CloseIcon />} {...getCancelButtonProps()} />
+          </Tooltip>
+        </ButtonGroup>
+      </Flex>
+    ) : (
+      <Flex justifyContent="end" mt={4} mr={1}>
+        <Tooltip label="Edit" placement="bottom" bg="gray" color="white">
+            <IconButton size="sm" icon={<EditIcon />} {...getEditButtonProps()} />
+        </Tooltip>
+      </Flex>
+    )
+  }
+
   const bg = useColorModeValue("gray.100", "gray.700");
   const color = useColorModeValue("gray.700", "gray.100");
   // @ts-ignore
@@ -131,16 +172,16 @@ const AddTodo = () => {
               mr={2}
               onClick={() => hideDonesF()}
               size="sm"
-              colorScheme={hideDones? "green" : "gray"}
+              colorScheme={hideDones===true? "green" : "gray"}
               variant="outline"
             >
-              {hideDones? "Show" : "Hide"} Finihsed
+              {hideDones===true? "Show" : "Hide"} Finihsed
             </Button>
 
           </Flex>
           <Center mt={5}>
             <List spacing={2} w="100%">
-              {todos.sort((a,b) => (a.isDone === b.isDone)? 0 : a.isDone? 1 : -1).filter(a => hideDones?a.isDone===false: true).map((a, idx) => (
+              {todos.sort((a,b) => (a.isDone === b.isDone)? 0 : a.isDone? 1 : -1).filter(a => hideDones===true?a.isDone===false: true).map((a, idx) => (
                 // @ts-ignore
                 <ListItem
                   cursor="pointer"
@@ -162,7 +203,6 @@ const AddTodo = () => {
                         color={a.isDone ? "green.500" : "gray.500"}
                       />
                       <Spacer />
-
                       <Tooltip label="Delete" placement="bottom" bg="red" color="white">
                         <IconButton
                           aria-label="Search database"
@@ -176,7 +216,12 @@ const AddTodo = () => {
                       </Tooltip>
                     </Flex>
                     <Text as={a.isDone? "s": "samp"}>
-                      {a.todo}
+                      <Editable defaultValue={a.todo} isPreviewFocusable={false} onSubmit={(nextValue: string) => textChanged(nextValue, a.id)}>
+                        <EditablePreview />
+                        <EditableInput />
+                        <EditableContext />
+
+                      </Editable>
                     </Text>
                   </Flex>
 
