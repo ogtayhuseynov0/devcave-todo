@@ -23,15 +23,18 @@ const AddTodo = () => {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [todos, setTodos] = useState<any[]>([]);
   const [todo, setTodo] = useState("");
+  const [hideDones, setHideDones] = useState(false);
   const [isServer, setIsServer] = useState(typeof window === "undefined");
   useEffect(() => {
     setIsServer(false)
     setTodos(JSON.parse(localStorage?.getItem("todos") as string) || []);
+    setHideDones(localStorage?.getItem("hideDones") as string as boolean);
   }, []);
   // @ts-ignore
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+    localStorage.setItem("hideDones", String(hideDones || false));
+  }, [todos, hideDones]);
   const addTodo = () => {
     if (todo.trim() !== "" && todo.trim().length<500) {
       setTodos((prevState) => [
@@ -70,9 +73,14 @@ const AddTodo = () => {
     let tds = todos.filter(a => a.id!==td.id)
     setTodos(tds);
   };
+  const hideDonesF = () => {
+    setHideDones(!hideDones)
+  }
+  const deleteAll = () => {
+    setTodos([])
+  }
   const bg = useColorModeValue("gray.100", "gray.700");
   const color = useColorModeValue("gray.700", "gray.100");
-
   // @ts-ignore
   return (
     <>
@@ -106,10 +114,33 @@ const AddTodo = () => {
               </InputRightElement>
             </InputGroup>
           </Center>
+          <Flex flexDir={"row-reverse"} mt={5} >
+            <Button
+              rightIcon={<MinusIcon />}
+              h="1.75rem"
+              onClick={() => deleteAll()}
+              size="sm"
+              colorScheme="red"
+              variant="outline"
+            >
+              Delete All
+            </Button>
+            <Button
+              rightIcon={<CheckCircleIcon />}
+              h="1.75rem"
+              mr={2}
+              onClick={() => hideDonesF()}
+              size="sm"
+              colorScheme={hideDones? "green" : "gray"}
+              variant="outline"
+            >
+              {hideDones? "Show" : "Hide"} Finihsed
+            </Button>
 
-          <Center mt={10}>
+          </Flex>
+          <Center mt={5}>
             <List spacing={2} w="100%">
-              {todos.sort((a,b) => (a.isDone === b.isDone)? 0 : a.isDone? 1 : -1).map((a, idx) => (
+              {todos.sort((a,b) => (a.isDone === b.isDone)? 0 : a.isDone? 1 : -1).filter(a => hideDones?a.isDone===false: true).map((a, idx) => (
                 // @ts-ignore
                 <ListItem
                   cursor="pointer"

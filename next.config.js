@@ -12,6 +12,10 @@ module.exports = withPWA({
     dest: "public",
     register: true,
   },
+  experimental: {
+    esmExternals: false
+  },
+  swcMinify: true,
   skipTypescriptChecking: true,
   reactStrictMode: true,
 });
