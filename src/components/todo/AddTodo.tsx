@@ -131,9 +131,10 @@ const AddTodo = () => {
                         color={a.isDone ? "green.500" : "gray.500"}
                       />
                       <Spacer />
+
                       <Tooltip label="Delete" placement="bottom" bg="red" color="white">
                         <IconButton
-aria-label="Search database"
+                          aria-label="Search database"
                           size="xs"
                           mr={2}
                           onClick={(e) => deleteClick(e,idx, a)}

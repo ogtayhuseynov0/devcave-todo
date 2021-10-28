@@ -4,15 +4,15 @@ const defaultSEOConfig = {
   titleTemplate: "%s | Todo - DevCave",
   defaultTitle: "Todo - DevCave",
   description: "Todo - DevCave todo app",
-  canonical: "https://nextarter-chakra.sznm.dev",
+  canonical: "https://todo.devcave.xyz/",
   openGraph: {
-    url: "https://nextarter-chakra.sznm.dev",
+    url: "https://todo.devcave.xyz/",
     title: "Todo - DevCave",
-    description: "\"Todo - DevCave todo app\"",
+    description: "Todo - DevCave todo app",
     images: [
       {
-        url: "https://og-image.sznm.dev/**nextarter-chakra**.sznm.dev.png?theme=dark&md=1&fontSize=125px&images=https%3A%2F%2Fsznm.dev%2Favataaars.svg&widths=250",
-        alt: "nextarter-chakra.sznm.dev og-image",
+        url: "https://todo.devcave.xyz/devcave.svg",
+        alt: "Todo - DevCave todo app",
       },
     ],
     site_name: "Todo - DevCave",
